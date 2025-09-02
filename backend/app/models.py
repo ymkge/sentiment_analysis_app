@@ -1,28 +1,33 @@
 from transformers import pipeline
 import operator
 
-# アプリケーション起動時に、Hugging Faceの事前学習済みモデルをロードする
-print("--- Hugging Faceモデルのロードを開始します ---")
-try:
-    sentiment_classifier = pipeline(
-        "sentiment-analysis",
-        model="nlptown/bert-base-multilingual-uncased-sentiment"
-    )
-    print("--- Hugging Faceモデルのロードが完了しました ---")
-except Exception as e:
-    print(f"[エラー] モデルのロード中に例外が発生しました: {e}")
-    sentiment_classifier = None
+def load_model():
+    """
+    Hugging Faceの事前学習済みモデルをロードして返す。
+    この関数はアプリケーションの起動時に一度だけ呼ばれます。
+    """
+    print("--- Hugging Faceモデルのロードを開始します ---")
+    try:
+        sentiment_classifier = pipeline(
+            "sentiment-analysis",
+            model="nlptown/bert-base-multilingual-uncased-sentiment"
+        )
+        print("--- Hugging Faceモデルのロードが完了しました ---")
+        return sentiment_classifier
+    except Exception as e:
+        print(f"[エラー] モデルのロード中に例外が発生しました: {e}")
+        return None
 
-def predict_sentiment(text: str):
+def predict_sentiment(classifier, text: str):
     """
-    Hugging Faceモデルを使って、入力されたテキストの感情を予測する。
+    渡された分類器（AIモデル）を使って、テキストの感情を予測する。
     """
-    if not sentiment_classifier:
+    if not classifier:
         return {"label": "ネガティブ", "score": 0.5, "details": []}
 
     try:
         # top_k=5 ですべてのクラス（1〜5つ星）の確率を取得
-        all_results = sentiment_classifier(text, top_k=5)
+        all_results = classifier(text, top_k=5)
         
         # 星の数でソート (例: '1 star' が最初に来るように)
         all_results.sort(key=lambda x: int(x['label'].split(' ')[0]))
