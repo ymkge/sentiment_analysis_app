@@ -6,13 +6,11 @@ def load_model():
     Hugging Faceの事前学習済みモデルをロードして返す。
     この関数はアプリケーションの起動時に一度だけ呼ばれます。
     """
-    print("--- Hugging Faceモデルのロードを開始します ---")
     try:
         sentiment_classifier = pipeline(
             "sentiment-analysis",
             model="nlptown/bert-base-multilingual-uncased-sentiment"
         )
-        print("--- Hugging Faceモデルのロードが完了しました ---")
         return sentiment_classifier
     except Exception as e:
         print(f"[エラー] モデルのロード中に例外が発生しました: {e}")

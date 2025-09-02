@@ -49,11 +49,11 @@ sentiment_analysis_app/
 
 ### 1. バックエンド (FastAPI) の起動
 
-**ターミナル1**
+**ターミナル1 (プロジェクトルートから)**
 
 ```bash
 # 1. バックエンドディレクトリに移動
-cd /Users/ymto/Documents/git/sentiment_analysis_app/backend
+cd backend
 
 # 2. 必要なライブラリをインストール
 pip install -r requirements.txt
@@ -65,11 +65,11 @@ uvicorn app.main:app --reload
 
 ### 2. フロントエンド (Next.js) の起動
 
-**ターミナル2**
+**ターミナル2 (プロジェクトルートから)**
 
 ```bash
 # 1. フロントエンドディレクトリに移動
-cd /Users/ymto/Documents/git/sentiment_analysis_app/frontend
+cd frontend
 
 # 2. 必要なパッケージをインストール
 npm install
