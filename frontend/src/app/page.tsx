@@ -1,13 +1,28 @@
 'use client';
 
 import { useState, Fragment } from 'react';
-import { Sparkles, LoaderCircle, AlertTriangle, Smile, Frown } from 'lucide-react';
+import { Sparkles, LoaderCircle, AlertTriangle, Smile, Frown, Star } from 'lucide-react';
 
 // APIレスポンスの型定義
+interface SentimentDetail {
+  label: string;
+  score: number;
+}
+
 interface SentimentResult {
   label: 'ポジティブ' | 'ネガティブ';
   score: number;
+  details: SentimentDetail[];
 }
+
+// 星のレンダリング用ヘルパー
+const StarRating = ({ rating }: { rating: number }) => (
+  <div className="flex items-center">
+    {[...Array(5)].map((_, i) => (
+      <Star key={i} className={`w-5 h-5 ${i < rating ? 'text-yellow-400' : 'text-gray-300'}`} fill="currentColor" />
+    ))}
+  </div>
+);
 
 export default function Home() {
   const [text, setText] = useState<string>('このサービスは本当に素晴らしい！心からお勧めします。');
@@ -84,7 +99,7 @@ export default function Home() {
           </button>
         </form>
 
-        <div className="mt-6 min-h-[160px]">
+        <div className="mt-6 min-h-[240px]">
           {error && (
             <div className="p-4 bg-red-100 text-red-800 border border-red-300 rounded-lg flex items-center gap-3 animate-fade-in">
               <AlertTriangle className="h-6 w-6" />
@@ -98,24 +113,38 @@ export default function Home() {
           {result && (
             <div className="p-6 border border-gray-200/80 rounded-lg bg-gray-50/50 animate-fade-in">
               <h2 className="text-xl font-semibold text-gray-800 mb-4 text-center">分析結果</h2>
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
                 <div className="flex flex-col items-center gap-2">
-                  {result.label === 'ポジティブ' ? <Smile className="w-12 h-12 text-green-500" /> : <Frown className="w-12 h-12 text-red-500" />}
+                  <p className="text-sm text-gray-600">最終判定</p>
                   <span
                     className={`px-4 py-1 text-lg font-bold rounded-full ${result.label === 'ポジティブ' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
                     {result.label}
                   </span>
                 </div>
-                <div className="w-full sm:w-2/3">
-                  <p className="text-center sm:text-left mb-1 text-gray-600">確信度</p>
-                  <div className="w-full bg-gray-200 rounded-full h-6 overflow-hidden">
-                    <div
-                      className={`h-full rounded-full transition-all duration-1000 ease-out ${result.label === 'ポジティブ' ? 'bg-green-500' : 'bg-red-500'}`}
-                      style={{ width: `${Math.round(result.score * 100)}%` }}
-                    ></div>
-                  </div>
-                  <p className="text-right font-mono text-lg mt-1">{(result.score * 100).toFixed(1)}%</p>
+                <div className="flex flex-col items-center gap-2">
+                   <p className="text-sm text-gray-600">モデルの予測</p>
+                   <StarRating rating={parseInt(result.details.find(d => d.score === result.score)?.label.split(' ')[0] || '0')} />
                 </div>
+              </div>
+
+              <h3 className="text-md font-semibold text-gray-700 mb-2">AIの思考プロセス</h3>
+              <div className="space-y-2">
+                {result.details.map((detail) => {
+                  const rating = parseInt(detail.label.split(' ')[0]);
+                  return (
+                    <div key={detail.label} className="flex items-center gap-3">
+                      <div className="w-12 text-sm text-gray-600 font-mono">{rating}つ星</div>
+                      <div className="w-full bg-gray-200 rounded-full h-6 overflow-hidden">
+                        <div
+                          className="h-full rounded-full bg-indigo-400 transition-all duration-1000 ease-out text-right pr-2 text-white text-sm flex items-center justify-end"
+                          style={{ width: `${Math.round(detail.score * 100)}%` }}
+                        >
+                          {(detail.score * 100).toFixed(1)}%
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}

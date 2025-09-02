@@ -37,7 +37,8 @@ def predict(request: SentimentRequest):
     テキストを受け取り、感情分析の結果を返します。
 
     - **text**: 分析したいテキスト文字列。
-    - **return**: 分析結果のラベル（'ポジティブ' or 'ネガティブ'）と確信度。
+    - **return**: 分析結果のラベル、確信度、および5段階評価の詳細。
     """
     result = predict_sentiment(request.text)
-    return SentimentResponse(label=result['label'], score=result['score'])
+    # result辞書のすべてのキーと値をSentimentResponseに渡す
+    return SentimentResponse(**result)
