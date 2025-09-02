@@ -1,4 +1,5 @@
 # 感情分析Webアプリ (FastAPI + Next.js版)
+<img width="703" height="833" alt="スクリーンショット 2025-09-02 21 10 20" src="https://github.com/user-attachments/assets/4476067b-9ff6-4d4f-8b9a-5336e7c82f57" />
 
 ユーザーが入力したレビュー文を「ポジティブ」「ネガティブ」に分類するWebアプリです。
 バックエンドはFastAPIとHugging Face Transformers、フロントエンドはNext.jsで構築されています。
