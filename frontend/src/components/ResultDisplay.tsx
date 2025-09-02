@@ -2,17 +2,7 @@
 
 import { AlertTriangle, Smile, Frown } from 'lucide-react';
 import { StarRating } from './StarRating';
-
-interface SentimentDetail {
-  label: string;
-  score: number;
-}
-
-interface SentimentResult {
-  label: 'ポジティブ' | 'ネガティブ';
-  score: number;
-  details: SentimentDetail[];
-}
+import type { SentimentResult } from '../app/page';
 
 interface ResultDisplayProps {
   result: SentimentResult | null;
